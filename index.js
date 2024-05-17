@@ -23,10 +23,7 @@ app.get("/projects", async (req, res) => {
 
 //create a endpoint for creating a project
 app.post("/projects", async (req, res) => {
-  const project = new Project({
-    name: req.body.name,
-    description: req.body.description,
-  });
+  const project = new Project(req.body);
 
   try {
     const newProject = await project.save();
