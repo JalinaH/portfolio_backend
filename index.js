@@ -34,20 +34,31 @@ app.post("/projects", async (req, res) => {
 });
 
 //create a endpoint for updating a project by id
-app.put("/projects/:id", async (req, res) => {
+app.patch("/projects/:id", async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
-    if (req.body.name) {
-      project.name = req.body.name;
+    if (project) {
+      project.set(req.body);
+      const updatedProject = await project.save();
+      res.json(updatedProject);
+    } else {
+      res.status(404).json({ message: "Project not found" });
     }
-    if (req.body.description) {
-      project.description = req.body.description;
-    }
-
-    const updatedProject = await project.save();
-    res.json(updatedProject);
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    res.status(500).json({ message: err.message });
+  }
+});
+
+app.delete("/projects/:id", async (req, res) => {
+  try {
+    const result = await Project.findByIdAndDelete(req.params.id);
+    if (result) {
+      res.json({ message: "Project deleted" });
+    } else {
+      res.status(404).json({ message: "Project not found" });
+    }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 });
 
