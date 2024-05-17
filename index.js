@@ -6,6 +6,8 @@ require("dotenv").config();
 const Project = require("./Project");
 const Blog = require("./Blog");
 
+app.use(express.json());
+
 app.get("/", (req, res) => {
   res.send("Hello, World!");
 });
@@ -16,6 +18,39 @@ app.get("/projects", async (req, res) => {
     res.json(projects);
   } catch (err) {
     res.status(500).json({ message: err.message });
+  }
+});
+
+//create a endpoint for creating a project
+app.post("/projects", async (req, res) => {
+  const project = new Project({
+    name: req.body.name,
+    description: req.body.description,
+  });
+
+  try {
+    const newProject = await project.save();
+    res.status(201).json(newProject);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+});
+
+//create a endpoint for updating a project by id
+app.put("/projects/:id", async (req, res) => {
+  try {
+    const project = await Project.findById(req.params.id);
+    if (req.body.name) {
+      project.name = req.body.name;
+    }
+    if (req.body.description) {
+      project.description = req.body.description;
+    }
+
+    const updatedProject = await project.save();
+    res.json(updatedProject);
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 });
 
