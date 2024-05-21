@@ -21,7 +21,6 @@ app.get("/projects", async (req, res) => {
   }
 });
 
-//create a endpoint for creating a project
 app.post("/projects", async (req, res) => {
   const project = new Project(req.body);
 
@@ -33,7 +32,6 @@ app.post("/projects", async (req, res) => {
   }
 });
 
-//create a endpoint for updating a project by id
 app.patch("/projects/:id", async (req, res) => {
   try {
     const project = await Project.findById(req.params.id);
