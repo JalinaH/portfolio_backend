@@ -2,6 +2,10 @@ const express = require("express");
 const app = express(); // create an express app
 const port = 5000;
 
+// Enable CORS
+const cors = require("cors");
+app.use(cors());
+
 require("dotenv").config();
 const Project = require("./Project");
 const Blog = require("./Blog");
